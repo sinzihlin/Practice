@@ -41,32 +41,67 @@ class ViewCell: UICollectionViewCell {
         setupViews()
         
     }
-    let thumbnaiImageView:UIImageView = {
+    let thumbnaiImageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.backgroundColor = UIColor.blue
         return imageView
+    }()
+    let userProfileImageView: UIImageView = {
+        let imageView = UIImageView()
+               imageView.backgroundColor = UIColor.green
+               return imageView
     }()
     
     let separatorView: UIView = {
         let view =  UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
         view.backgroundColor = UIColor.black
         return view
     }()
-   
+    let titleLable: UILabel = {
+        let label = UILabel()
+        label.backgroundColor = #colorLiteral(red: 0.1764705926, green: 0.4980392158, blue: 0.7568627596, alpha: 1)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    let subtitleTextView: UITextView = {
+        let textView = UITextView()
+        textView.backgroundColor = #colorLiteral(red: 0.2745098174, green: 0.4862745106, blue: 0.1411764771, alpha: 1)
+        textView.translatesAutoresizingMaskIntoConstraints = false
+        return textView
+    }()
     func setupViews() {
         addSubview(thumbnaiImageView)
         addSubview(separatorView)
+        addSubview( userProfileImageView)
+        addSubview(titleLable)
+        addSubview(subtitleTextView)
         
-        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|-16-[v0]-16-|", options: NSLayoutConstraint.FormatOptions(), metrics: nil, views: ["v0" : thumbnaiImageView]))
-        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|-16-[v0]-16-[v1(1)]|", options: NSLayoutConstraint.FormatOptions(), metrics: nil, views: ["v0" : thumbnaiImageView,"v1" : separatorView]))
+         addConstraintWithFormat(format: "H:|-16-[v0]-16-|", views: thumbnaiImageView)
+        addConstraintWithFormat(format: "H:|-16-[v0(44)]", views: userProfileImageView)
+        //垂直
+      addConstraintWithFormat(format: "V:|-16-[v0]-8-[v1(44)]-16-[v2(1)]|", views: thumbnaiImageView,userProfileImageView,separatorView)
+      addConstraintWithFormat(format: "H:|[v0]|", views: separatorView)
+       
+        //上 constrain
+        addConstraint(NSLayoutConstraint.init(item: titleLable, attribute: .top, relatedBy: .equal, toItem: thumbnaiImageView, attribute: .bottom, multiplier: 1, constant: 8))
+        //左 constrain
+        addConstraint(NSLayoutConstraint.init(item: titleLable, attribute: .left, relatedBy: .equal, toItem: userProfileImageView, attribute: .right, multiplier: 1, constant: 8))
+        //右 constrain
+          addConstraint(NSLayoutConstraint.init(item: titleLable, attribute: .right, relatedBy: .equal, toItem: thumbnaiImageView, attribute: .right, multiplier: 1, constant: 0))
+        //高 constrain
+        addConstraint(NSLayoutConstraint.init(item: titleLable, attribute: .height, relatedBy: .equal, toItem: self, attribute: .height, multiplier: 0, constant: 20))
         
-        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|[v0]|", options: NSLayoutConstraint.FormatOptions(), metrics: nil, views: ["v0" : separatorView]))
-//                 addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:[v0(1)]|", options: NSLayoutConstraint.FormatOptions(), metrics: nil, views: ["v0" : separatorView]))
         
-        thumbnaiImageView.frame = CGRect(x: 0, y: 0, width: 100, height: 100)
-    }
+        //上 constrain
+        addConstraint(NSLayoutConstraint.init(item: subtitleTextView, attribute: .top, relatedBy: .equal, toItem: titleLable, attribute: .bottom, multiplier: 1, constant: 8))
+        //左 constrain
+        addConstraint(NSLayoutConstraint.init(item: subtitleTextView, attribute: .left, relatedBy: .equal, toItem: userProfileImageView, attribute: .right, multiplier: 1, constant: 8))
+        //右 constrain
+          addConstraint(NSLayoutConstraint.init(item: subtitleTextView, attribute: .right, relatedBy: .equal, toItem: thumbnaiImageView, attribute: .right, multiplier: 1, constant: 0))
+        //高 constrain
+        addConstraint(NSLayoutConstraint.init(item: subtitleTextView, attribute: .height, relatedBy: .equal, toItem: self, attribute: .height, multiplier: 0, constant: 20))
+        
+            }
     required init?(coder: NSCoder) {
            fatalError("init(coder:) has not been implemented")
        }
@@ -76,9 +111,11 @@ extension  UIView {
     func addConstraintWithFormat(format: String , views: UIView...) {
         var viewsDictionary = [String: UIView]()
         for(index, view) in views.enumerated(){
+            view.translatesAutoresizingMaskIntoConstraints  = false
             let key = "v\(index)"
             viewsDictionary[key] = view
         }
-        NSLayoutConstraint.constraints(withVisualFormat: format, options: NSLayoutConstraint.FormatOptions(), metrics: nil, views: viewsDictionary)
+        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: format, options: NSLayoutConstraint.FormatOptions(), metrics: nil, views: viewsDictionary))
+        
     }
 }
